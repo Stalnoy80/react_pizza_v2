@@ -7,6 +7,14 @@ body {
   background-color: $background;
 }
 
+.block1 {
+  ul {
+    li {
+      color: green;
+    }
+  }
+}
+
 .wrapper {
   width: calc(100vw - 100px);
   height: 100%;
