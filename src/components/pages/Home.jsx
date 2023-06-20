@@ -9,11 +9,20 @@ import { useEffect, useState } from 'react';
 const Home = () => {
   const [pizzas, setPizzas] = useState([]);
   const [pizzasLoading, setPizzasLoading] = useState(true);
-  const [activeMenuState, setActiveMenuState] = useState();
-  const [selectedMenuItem, setSelectedMenuItem] = useState(0);
+  const [activeMenuState, setActiveMenuState] = useState(0);
+  const [selectedSortItem, setSelectedSortItem] = useState({
+    title: 'популярности',
+    sortProp: 'rating',
+  });
 
   useEffect(() => {
-    fetch('https://cc584a630fdf932d.mokky.ru/pizzas')
+    setPizzasLoading(true);
+
+    fetch(
+      `https://cc584a630fdf932d.mokky.ru/pizzas?${
+        activeMenuState > 0 ? `category=*${activeMenuState}` : ''
+      }&sortBy=${selectedSortItem.sortProp}`,
+    )
       .then((res) => {
         return res.json();
       })
@@ -22,13 +31,13 @@ const Home = () => {
         setPizzasLoading(false);
       });
     window.scroll(0, 0);
-  }, []);
+  }, [activeMenuState, selectedSortItem]);
 
   return (
     <>
       <div className="content__top">
         <Categories value={activeMenuState} onClickCategory={(i) => setActiveMenuState(i)} />
-        <Sort />
+        <Sort value={selectedSortItem} clickOnSort={(i) => setSelectedSortItem(i)} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">

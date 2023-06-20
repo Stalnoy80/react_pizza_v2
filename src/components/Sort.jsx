@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 
-const Sort = () => {
+const Sort = ({ value, clickOnSort }) => {
   const [sortMenu, setSortMenu] = useState(false);
-  const [selectedMenuItem, setSelectedMenuItem] = useState(0);
   const sortMenuHiding = (i) => {
-    setSelectedMenuItem(i);
+    clickOnSort(i);
     setSortMenu(false);
   };
-  const sort = ['популярности', 'цене', 'алфавиту'];
-
-  const sortStringName = sort[selectedMenuItem];
+  const sort = [
+    { title: 'популярности (>)', sortProp: 'rating' },
+    { title: 'популярности (<)', sortProp: '-rating' },
+    { title: 'цена (>)', sortProp: 'price' },
+    { title: 'цена (<)', sortProp: '-price' },
+    { title: 'алфавиту (>)', sortProp: 'title' },
+    { title: 'алфавиту (<)', sortProp: '-title' },
+  ];
 
   return (
     <div className="sort">
@@ -25,17 +29,17 @@ const Sort = () => {
             fill="#2C2C2C"></path>
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setSortMenu(!sortMenu)}>{sortStringName}</span>
+        <span onClick={() => setSortMenu(!sortMenu)}>{value.title}</span>
       </div>
       {sortMenu && (
         <div className="sort__popup">
           <ul>
-            {sort.map((name, i) => (
+            {sort.map((obj, i) => (
               <li
                 key={i}
-                onClick={() => sortMenuHiding(i)}
-                className={selectedMenuItem === i ? 'active' : ''}>
-                {name}
+                onClick={() => sortMenuHiding(obj)}
+                className={value.sortProp === obj.sortProp ? 'active' : ''}>
+                {obj.title}
               </li>
             ))}
           </ul>
