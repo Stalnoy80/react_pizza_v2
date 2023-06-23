@@ -40,7 +40,7 @@ body {
   &__items {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
     grid-column-gap: 11px;
     grid-row-gap: 20px;
 
@@ -132,7 +132,7 @@ body {
         margin-right: 10px;
         path {
           stroke: $black;
-          stroke-width: 1.9;
+          strokewidth: 1.9;
         }
       }
     }
@@ -321,7 +321,7 @@ body {
             margin-right: 12px;
             path {
               fill: transparent;
-              stroke-width: 2;
+              strokewidth: 2;
             }
           }
         }
