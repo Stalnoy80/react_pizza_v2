@@ -10,16 +10,18 @@ const initialState = {
 };
 
 const filterSlice = createSlice({
-  name: 'filterSlices',
+  name: 'filterSlice',
   initialState,
   reducers: {
     setCategoryId(state, action) {
-      console.log(action);
       state.activeMenuState = action.payload;
+    },
+    setSort(state, action) {
+      state.sort = action.payload;
     },
   },
 });
 
-export const { setCategoryId } = filterSlice.actions;
+export const { setCategoryId, setSort } = filterSlice.actions;
 
 export default filterSlice.reducer;

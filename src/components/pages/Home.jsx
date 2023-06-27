@@ -8,17 +8,23 @@ import { useEffect, useState } from 'react';
 import Pagination from '../Pagination';
 import { useContext } from 'react';
 import { SearchContext } from '../../App';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategoryId } from '../../redux/slices/filterSlice';
 
 const Home = () => {
+  const activeMenuState = useSelector((state) => state.filterSlice.activeMenuState);
+  const selectedSortItem = useSelector((state) => state.filterSlice.sort.sortProp);
+
+  const dispatch = useDispatch();
+
   const { searchInputText } = useContext(SearchContext);
   const [pizzas, setPizzas] = useState([]);
   const [pizzasIsLoading, setPizzasIsLoading] = useState(true);
-  const [activeMenuState, setActiveMenuState] = useState(0);
   const [currentPaginationPage, setCurrentPaginationPage] = useState(1);
-  const [selectedSortItem, setSelectedSortItem] = useState({
-    title: 'популярности',
-    sortProp: 'rating',
-  });
+
+  const onClickCategory = (id) => {
+    dispatch(setCategoryId(id));
+  };
 
   const pizzasMassive = pizzas
     // .filter((obj) => {
@@ -49,8 +55,8 @@ const Home = () => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories value={activeMenuState} onClickCategory={(i) => setActiveMenuState(i)} />
-        <Sort value={selectedSortItem} clickOnSort={(i) => setSelectedSortItem(i)} />
+        <Categories value={activeMenuState} onClickCategory={onClickCategory} />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{pizzasIsLoading ? sceleton : pizzasMassive}</div>

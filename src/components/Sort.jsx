@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSort } from '../redux/slices/filterSlice';
 
-const Sort = ({ value, clickOnSort }) => {
+const Sort = () => {
   const [sortMenu, setSortMenu] = useState(false);
-  const sortMenuHiding = (i) => {
-    clickOnSort(i);
-    setSortMenu(false);
-  };
+  const dispatch = useDispatch();
+  const sortState = useSelector((state) => state.filterSlice.sort);
+
   const sort = [
     { title: 'популярности (>)', sortProp: 'rating' },
     { title: 'популярности (<)', sortProp: '-rating' },
@@ -14,6 +15,10 @@ const Sort = ({ value, clickOnSort }) => {
     { title: 'алфавиту (>)', sortProp: 'title' },
     { title: 'алфавиту (<)', sortProp: '-title' },
   ];
+  const sortMenuHiding = (obj) => {
+    dispatch(setSort(obj));
+    setSortMenu(false);
+  };
 
   return (
     <div className="sort">
@@ -29,7 +34,7 @@ const Sort = ({ value, clickOnSort }) => {
             fill="#2C2C2C"></path>
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setSortMenu(!sortMenu)}>{value.title}</span>
+        <span onClick={() => setSortMenu(!sortMenu)}>{sortState.title}</span>
       </div>
       {sortMenu && (
         <div className="sort__popup">
@@ -38,7 +43,7 @@ const Sort = ({ value, clickOnSort }) => {
               <li
                 key={i}
                 onClick={() => sortMenuHiding(obj)}
-                className={value.sortProp === obj.sortProp ? 'active' : ''}>
+                className={sortState.sortProp === obj.sortProp ? 'active' : ''}>
                 {obj.title}
               </li>
             ))}
