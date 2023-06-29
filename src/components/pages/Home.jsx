@@ -9,21 +9,26 @@ import Pagination from '../Pagination';
 import { useContext } from 'react';
 import { SearchContext } from '../../App';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategoryId } from '../../redux/slices/filterSlice';
+import { setCategoryId, setCurrentPage } from '../../redux/slices/filterSlice';
+import axios from 'axios';
 
 const Home = () => {
   const activeMenuState = useSelector((state) => state.filterSlice.activeMenuState);
-  const selectedSortItem = useSelector((state) => state.filterSlice.sort.sortProp);
+  const selectedSortItem = useSelector((state) => state.filterSlice.sort);
+  const currentPage = useSelector((state) => state.filterSlice.currentPage);
 
   const dispatch = useDispatch();
 
   const { searchInputText } = useContext(SearchContext);
   const [pizzas, setPizzas] = useState([]);
   const [pizzasIsLoading, setPizzasIsLoading] = useState(true);
-  const [currentPaginationPage, setCurrentPaginationPage] = useState(1);
 
   const onClickCategory = (id) => {
     dispatch(setCategoryId(id));
+  };
+
+  const onChangePage = (id) => {
+    dispatch(setCurrentPage(id));
   };
 
   const pizzasMassive = pizzas
@@ -39,18 +44,16 @@ const Home = () => {
     const search = searchInputText ? `title=*${searchInputText}` : '';
     // const pagination = page=1&limit=5;
 
-    fetch(
-      `https://cc584a630fdf932d.mokky.ru/pizzas?${categories}${search}&sortBy=${selectedSortItem.sortProp}&page=${currentPaginationPage}&limit=4`,
-    )
+    axios
+      .get(
+        `https://cc584a630fdf932d.mokky.ru/pizzas?${categories}${search}&sortBy=${selectedSortItem.sortProp}&page=${currentPage}&limit=4`,
+      )
       .then((res) => {
-        return res.json();
-      })
-      .then((pizzaObj) => {
-        setPizzas(pizzaObj.items);
+        setPizzas(res.data.items);
         setPizzasIsLoading(false);
       });
     window.scroll(0, 0);
-  }, [activeMenuState, selectedSortItem, searchInputText, currentPaginationPage]);
+  }, [activeMenuState, selectedSortItem, searchInputText, currentPage]);
 
   return (
     <div className="container">
@@ -60,7 +63,7 @@ const Home = () => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{pizzasIsLoading ? sceleton : pizzasMassive}</div>
-      <Pagination clickOnPaginationPage={(i) => setCurrentPaginationPage(i)} />
+      <Pagination currentPage={currentPage} clickOnPaginationPage={onChangePage} />
     </div>
   );
 };

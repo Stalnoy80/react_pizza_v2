@@ -1,11 +1,33 @@
-import React from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import styles from './Search.module.scss';
 import { useContext } from 'react';
 import { SearchContext } from '../../App';
+import debounce from 'lodash.debounce';
 
 const Search = () => {
-  const { searchInputText, setSearchInputText } = useContext(SearchContext);
+  const [value, setValue] = useState('');
+  const { setSearchInputText } = useContext(SearchContext);
+
+  const inputRef = useRef();
+
+  const onClickClear = () => {
+    setSearchInputText('');
+    setValue('');
+    inputRef.current.focus();
+  };
+
+  const updateSearchInputText = useCallback(
+    debounce((str) => {
+      setSearchInputText(str);
+    }, 1000),
+    [],
+  );
+
+  const onChangeInput = (event) => {
+    setValue(event.target.value);
+    updateSearchInputText(event.target.value);
+  };
 
   return (
     <div className={styles.root}>
@@ -28,16 +50,15 @@ const Search = () => {
         />
       </svg>
       <input
-        value={searchInputText}
-        onChange={(e) => {
-          setSearchInputText(e.target.value);
-        }}
+        ref={inputRef}
+        value={value}
+        onChange={onChangeInput}
         className={styles.input}
         placeholder="Поиск пиццы..."
       />
-      {searchInputText && (
+      {value && (
         <svg
-          onClick={() => setSearchInputText('')}
+          onClick={onClickClear}
           className={styles.close}
           width="800px"
           height="800px"
@@ -49,9 +70,9 @@ const Search = () => {
               id="Vector"
               d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16"
               stroke="#000000"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </g>
         </svg>
