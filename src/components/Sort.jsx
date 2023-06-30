@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSort } from '../redux/slices/filterSlice';
 
+export const sortList = [
+  { title: 'популярности (>)', sortProp: 'rating' },
+  { title: 'популярности (<)', sortProp: '-rating' },
+  { title: 'цена (>)', sortProp: 'title' },
+  { title: 'цена (<)', sortProp: '-title' },
+  { title: 'алфавиту (>)', sortProp: 'price' },
+  { title: 'алфавиту (<)', sortProp: '-price' },
+];
+
 const Sort = () => {
   const [sortMenu, setSortMenu] = useState(false);
   const dispatch = useDispatch();
   const sortState = useSelector((state) => state.filterSlice.sort);
 
-  const sort = [
-    { title: 'популярности (>)', sortProp: 'rating' },
-    { title: 'популярности (<)', sortProp: '-rating' },
-    { title: 'цена (>)', sortProp: 'price' },
-    { title: 'цена (<)', sortProp: '-price' },
-    { title: 'алфавиту (>)', sortProp: 'title' },
-    { title: 'алфавиту (<)', sortProp: '-title' },
-  ];
   const sortMenuHiding = (obj) => {
     dispatch(setSort(obj));
     setSortMenu(false);
@@ -39,7 +40,7 @@ const Sort = () => {
       {sortMenu && (
         <div className="sort__popup">
           <ul>
-            {sort.map((obj, i) => (
+            {sortList.map((obj, i) => (
               <li
                 key={i}
                 onClick={() => sortMenuHiding(obj)}

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Categories from '../Categories';
-import Sort from '../Sort';
+import Sort, { sortList } from '../Sort';
 import PizzaBlock from '../PizzaBlock';
 import Sceleton from '../Sceleton';
 
@@ -9,15 +9,19 @@ import Pagination from '../Pagination';
 import { useContext } from 'react';
 import { SearchContext } from '../../App';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategoryId, setCurrentPage } from '../../redux/slices/filterSlice';
+import { setCategoryId, setCurrentPage, setFilters } from '../../redux/slices/filterSlice';
 import axios from 'axios';
+import QueryString from 'qs';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const activeMenuState = useSelector((state) => state.filterSlice.activeMenuState);
   const selectedSortItem = useSelector((state) => state.filterSlice.sort);
   const currentPage = useSelector((state) => state.filterSlice.currentPage);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isMounted = useRef(false);
+  const isSearch = useRef(false);
 
   const { searchInputText } = useContext(SearchContext);
   const [pizzas, setPizzas] = useState([]);
@@ -31,14 +35,7 @@ const Home = () => {
     dispatch(setCurrentPage(id));
   };
 
-  const pizzasMassive = pizzas
-    // .filter((obj) => {
-    //   return obj.title.toLowerCase().includes(searchInputText.toLowerCase()) && obj;
-    // })
-    .map((obj) => <PizzaBlock key={obj.id} {...obj} />);
-  const sceleton = [...new Array(6)].map((_, index) => <Sceleton key={index} />);
-
-  useEffect(() => {
+  const fetchPizzas = () => {
     setPizzasIsLoading(true);
     const categories = activeMenuState > 0 ? `category=*${activeMenuState}` : '';
     const search = searchInputText ? `title=*${searchInputText}` : '';
@@ -53,7 +50,46 @@ const Home = () => {
         setPizzasIsLoading(false);
       });
     window.scroll(0, 0);
+  };
+
+  const pizzasMassive = pizzas
+    // .filter((obj) => {
+    //   return obj.title.toLowerCase().includes(searchInputText.toLowerCase()) && obj;
+    // })
+    .map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+  const sceleton = [...new Array(6)].map((_, index) => <Sceleton key={index} />);
+
+  useEffect(() => {
+    if (window.location.search) {
+      const params = QueryString.parse(window.location.search.substring(1));
+
+      const sort = sortList.find((obj) => obj.sortProp === params.sortProp);
+      dispatch(setFilters({ ...params, sort }));
+      isSearch.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPizzas();
+
+    if (!isSearch.current) {
+      fetchPizzas();
+    }
+
+    isSearch.current = false;
   }, [activeMenuState, selectedSortItem, searchInputText, currentPage]);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      const queryString = QueryString.stringify({
+        sortProp: selectedSortItem.sortProp,
+        activeMenuState,
+        currentPage,
+      });
+      navigate(`?${queryString}`);
+    }
+    isMounted.current = true;
+  }, [activeMenuState, selectedSortItem.sortProp, currentPage]);
 
   return (
     <div className="container">
