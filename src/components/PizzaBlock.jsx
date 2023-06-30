@@ -11,6 +11,7 @@ const PizzaBlock = ({ id, price, title, imageUrl, sizes, types }) => {
   const dispatch = useDispatch();
 
   const pizzaNames = ['тонкое', 'традиционное'];
+  const sizeScale = ['26', '30', '40'];
 
   const [pizzaType, setPizzaType] = useState(0);
   const [pizzaSize, setPizzaSize] = useState(0);
@@ -21,8 +22,8 @@ const PizzaBlock = ({ id, price, title, imageUrl, sizes, types }) => {
       title,
       price,
       imageUrl,
-      type: pizzaType,
-      size: pizzaSize,
+      type: pizzaType[pizzaNames],
+      size: pizzaSize[sizeScale],
     };
     dispatch(addItem(item));
   };
