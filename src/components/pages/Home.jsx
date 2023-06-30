@@ -49,8 +49,19 @@ const Home = () => {
         setPizzas(res.data.items);
         setPizzasIsLoading(false);
       });
-    window.scroll(0, 0);
   };
+
+  useEffect(() => {
+    if (isMounted.current) {
+      const queryString = QueryString.stringify({
+        sortProp: selectedSortItem,
+        activeMenuState,
+        currentPage,
+      });
+      navigate(`?${queryString}`);
+    }
+    isMounted.current = true;
+  }, [activeMenuState, selectedSortItem, currentPage]);
 
   const pizzasMassive = pizzas
     // .filter((obj) => {
@@ -70,7 +81,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    fetchPizzas();
+    window.scroll(0, 0);
 
     if (!isSearch.current) {
       fetchPizzas();
@@ -78,18 +89,6 @@ const Home = () => {
 
     isSearch.current = false;
   }, [activeMenuState, selectedSortItem, searchInputText, currentPage]);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      const queryString = QueryString.stringify({
-        sortProp: selectedSortItem.sortProp,
-        activeMenuState,
-        currentPage,
-      });
-      navigate(`?${queryString}`);
-    }
-    isMounted.current = true;
-  }, [activeMenuState, selectedSortItem.sortProp, currentPage]);
 
   return (
     <div className="container">
