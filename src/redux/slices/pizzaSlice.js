@@ -4,7 +4,7 @@ import axios from 'axios';
 export const fetchPizzas = createAsyncThunk('pizzaSlice/fetchPizzasStatus', async (params) => {
   const { categories, search, selectedSortItem, currentPage } = params;
   const { data } = await axios.get(
-    `https://--cc584a630fdf932d.mokky.ru/pizzas?${categories}${search}&sortBy=${selectedSortItem.sortProp}&page=${currentPage}&limit=4`,
+    `https://cc584a630fdf932d.mokky.ru/pizzas?${categories}${search}&sortBy=${selectedSortItem.sortProp}&page=${currentPage}&limit=4`,
   );
   return data;
 });

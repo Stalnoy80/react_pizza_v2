@@ -33,11 +33,13 @@ body {
   padding: 40px 0;
 
   &__error-info {
-    margin: 60px auto;
-    width: 580px;
+    margin: 100px auto;
+    width: 500px;
+    text-align: center;
     h2 {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 700;
+      margin-bottom: 20px;
     }
     p {
       font-size: 20px;
