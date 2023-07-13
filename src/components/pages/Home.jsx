@@ -15,7 +15,7 @@ import {
   setFilters,
 } from '../../redux/slices/filterSlice';
 import QueryString from 'qs';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchPizzas } from '../../redux/slices/pizzaSlice';
 
 const Home = () => {
