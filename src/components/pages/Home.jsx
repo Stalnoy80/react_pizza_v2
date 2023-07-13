@@ -6,28 +6,30 @@ import Sceleton from '../Sceleton';
 
 import { useEffect, useState } from 'react';
 import Pagination from '../Pagination';
-import { useContext } from 'react';
-import { SearchContext } from '../../App';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategoryId, setCurrentPage, setFilters } from '../../redux/slices/filterSlice';
+import {
+  filterSelector,
+  filterSort,
+  setCategoryId,
+  setCurrentPage,
+  setFilters,
+} from '../../redux/slices/filterSlice';
 import QueryString from 'qs';
 import { useNavigate } from 'react-router-dom';
 import { fetchPizzas } from '../../redux/slices/pizzaSlice';
 
 const Home = () => {
-  const activeMenuState = useSelector((state) => state.filterSlice.activeMenuState);
-  const selectedSortItem = useSelector((state) => state.filterSlice.sort);
-  const currentPage = useSelector((state) => state.filterSlice.currentPage);
+  const { activeMenuState, currentPage, searchInputText } = useSelector(filterSelector);
+  const selectedSortItem = useSelector(filterSort);
   const { items, status } = useSelector((state) => state.pizzaSlice);
 
-  // const totalItems = items.items;
+  console.log(searchInputText);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isMounted = useRef(false);
   const isSearch = useRef(false);
 
-  const { searchInputText } = useContext(SearchContext);
   const onClickCategory = (id) => {
     dispatch(setCategoryId(id));
   };
@@ -62,7 +64,7 @@ const Home = () => {
       navigate(`?${queryString}`);
     }
     isMounted.current = true;
-  }, [activeMenuState, selectedSortItem, currentPage]);
+  }, [activeMenuState, selectedSortItem, currentPage, searchInputText]);
 
   const pizzasMassive = () => items?.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
 
@@ -83,7 +85,7 @@ const Home = () => {
       getPizzas();
     }
     isSearch.current = false;
-  }, [activeMenuState, selectedSortItem, currentPage]);
+  }, [activeMenuState, selectedSortItem, currentPage, searchInputText]);
 
   return (
     <div className="container">
