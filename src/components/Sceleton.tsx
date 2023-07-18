@@ -1,7 +1,7 @@
 import React from 'react';
 import ContentLoader from 'react-content-loader';
 
-const Sceleton = (props) => (
+const Sceleton = (props: any) => (
   <ContentLoader
     className="pizza-block"
     speed={2}

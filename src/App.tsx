@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
 import './scss/app.scss';
 import Home from './components/pages/Home';
 import NotFound from './components/pages/NotFound';
@@ -13,7 +12,7 @@ function App() {
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route path="" element={<Home />} />
-        <Route path="cart" element={<Cart />} />
+        <Route path="cart" element={<Cart count={undefined} />} />
         <Route path="pizza/:id" element={<FullPizza />} />
         <Route path="*" element={<NotFound />} />
       </Route>

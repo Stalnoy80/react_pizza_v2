@@ -1,18 +1,18 @@
 import React from 'react';
 import pizzaLogo from '../assets/img/pizza-logo.svg';
-import { BrowserRouter as Router, Switch, Route, Link, useLocation } from 'react-router-dom';
-import Cart from './Cart';
+import { Link, useLocation, Route } from 'react-router-dom';
 import Search from './Search';
 import { useSelector } from 'react-redux';
+import { cartSelector } from '../redux/slices/cartSlice';
 
 const Header = () => {
-  const { items, totalPrice } = useSelector((state) => state.cartSlice);
+  const { items, totalPrice } = useSelector(cartSelector);
 
   const location = useLocation();
 
   console.log(location, window.location);
 
-  const totalCount = items.reduce((total, item) => total + item.count, 0);
+  const totalCount = items.reduce((total: number, item: any) => total + item.count, 0);
   return (
     <div className="header">
       <div className="container">
