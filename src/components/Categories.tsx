@@ -9,9 +9,7 @@ type CategoriesProps = {
 
 const menu = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
-const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory, getCategories }) => {
-  getCategories?.(menu);
-
+const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory }) => {
   return (
     <div className="categories">
       <ul>
