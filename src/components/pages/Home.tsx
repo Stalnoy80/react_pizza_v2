@@ -16,12 +16,12 @@ import {
 } from '../../redux/slices/filterSlice';
 import QueryString from 'qs';
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchPizzas } from '../../redux/slices/pizzaSlice';
+import { fetchPizzas, pizzaSelector } from '../../redux/slices/pizzaSlice';
 
-const Home = () => {
+const Home: React.FC = () => {
   const { activeMenuState, currentPage, searchInputText } = useSelector(filterSelector);
   const selectedSortItem = useSelector(filterSort);
-  const { items, status } = useSelector((state) => state.pizzaSlice);
+  const { items, status } = useSelector(pizzaSelector);
 
   console.log(searchInputText);
 
@@ -30,11 +30,11 @@ const Home = () => {
   const isMounted = useRef(false);
   const isSearch = useRef(false);
 
-  const onClickCategory = (id) => {
+  const onClickCategory = (id: number) => {
     dispatch(setCategoryId(id));
   };
 
-  const onChangePage = (id) => {
+  const onChangePage = (id: number) => {
     dispatch(setCurrentPage(id));
   };
 
@@ -43,6 +43,7 @@ const Home = () => {
     const search = searchInputText ? `title=*${searchInputText}` : '';
     // const pagination = page=1&limit=5;
     dispatch(
+      //@ts-ignore
       fetchPizzas({
         categories,
         search,
@@ -66,7 +67,7 @@ const Home = () => {
     isMounted.current = true;
   }, [activeMenuState, selectedSortItem, currentPage, searchInputText]);
 
-  const pizzasMassive = () => items?.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+  const pizzasMassive = () => items?.map((obj: any) => <PizzaBlock key={obj.id} {...obj} />);
 
   const sceleton = [...new Array(6)].map((_, index) => <Sceleton key={index} />);
 
